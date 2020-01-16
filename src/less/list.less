@@ -1,0 +1,100 @@
+.list{
+    background-color: #ffffff;
+    height: 100%;
+    // overflow: auto;
+    position: relative;
+    .list_modle{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.639);
+        z-index: 999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .list_modle_k{
+            width:500px;
+            height: 400px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding:10px;
+            position: relative;
+            .list_modle_k_title{
+                width: 100%;
+                font-size: 20px;
+                text-align: center;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #aaa;
+            }
+            .list_modle_k_content{
+                display: flex;
+                flex-flow: column;
+                align-items: center;
+                justify-content: center;
+                padding:15px 0;
+                overflow: hidden;
+                .ant-input-group-wrapper{
+                    margin:5px 0;
+                    
+                }
+            }
+            .list_modle_k_btn{
+                width:100%;
+                // background-color: rgba(0, 0, 0, 0.639);
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                padding-bottom: 20px;
+                display: flex;
+                justify-content: flex-end;
+                button{
+                    margin-right: 50px;
+                }
+            }
+        }
+    }
+    .list_operation{
+        padding:15px 0 15px 20px;
+        button{
+            margin:0 10px 0 10px;
+        }
+    }
+    .ant-table-wrapper{
+        width:100%;
+        height: 100%;
+
+        .ant-spin-nested-loading{
+            .ant-spin-container{
+                // padding-bottom: 50px;
+                display: flex;
+                flex-flow: column;
+                justify-content: center;
+                align-items: center;
+                .ant-table{
+                    width: 100%;
+                    .ant-table-content{
+                        .ant-table-scroll{
+                            table{
+                                text-align: center;
+                                .ant-table-thead{
+                                    tr{
+                                        th{
+                                            text-align: center;
+                                        }
+                                    }
+                                }
+                            }   
+                        }
+                    }
+                }
+                // .ant-pagination{//分页
+                //     // position: fixed;
+                //     // bottom: 58px;
+                //     // left:50%;
+                // }
+            }
+        }
+        
+        
+    }
+}

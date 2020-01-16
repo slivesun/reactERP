@@ -1,5 +1,5 @@
 import React from 'react';
-import {Switch,Route,Redirect} from 'react-router-dom';
+import {Switch,Route} from 'react-router-dom';
 import Login from './commpont/login/index';
 import Index from './commpont/index';
 import './less/app.less';

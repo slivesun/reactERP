@@ -2,10 +2,10 @@ import React from 'react';
 // import ReactDOM from 'react-dom';
 
 class Knowledge extends React.Component {
-    constructor() {
-        super();
+    // constructor() {
+    //     super();
         
-    }
+    // }
     render() {
         return <div className='knowledge'>
                 react知识点管理

@@ -37,7 +37,7 @@ class Slider extends React.Component {
                 defaultSelectedKeys={[path]}
                 mode="inline"
                 theme="dark"
-                style={{height:'100%'}}
+                style={{height:'100%',backgroundColor:'rgb(32, 32, 32)'}}
                 >
                 {/* ant-menu-item-selected */}
                     <Menu.Item key="/home">

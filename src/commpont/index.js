@@ -48,7 +48,7 @@ class Index extends React.Component {
                                     }}></Route>
                                 </Switch>
                             </Content>
-                            <Footer >Footer</Footer>
+                            <Footer style={{textAlign:'center'}}>React后台管理系统 备案：pc45daa6588ssw44</Footer>
                         </Layout>
                     </Layout>
                 </div>;

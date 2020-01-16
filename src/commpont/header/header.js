@@ -6,18 +6,22 @@ import '../../less/header.less';
 
 
 
-
+let out=()=>{
+  console.log('退出登录')
+}
 const content2 = (
     <div>
       <p>感谢您使用本系统！</p>
-      <Button style={{marginLeft:40}}>退出</Button>
+      <Button style={{marginLeft:40}} onClick={()=>{out()}}>退出</Button>
     </div>
   );
 class Header extends React.Component {
-    constructor() {
-        super();
+    // constructor() {
+    //     super();
         
-    }
+        
+    // }
+    
      
     render() {
         return <div className='header_box'>
