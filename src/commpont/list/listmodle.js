@@ -12,8 +12,10 @@ class listModle extends React.Component {
             key:null
         }        
     }
-    componentWillReceiveProps (nextprops){//父组件数据变化时
+    UNSAFE_componentWillReceiveProps (nextprops){//父组件数据变化时
         let {modifydata} = nextprops.control
+        console.log(nextprops)
+        console.log(this.props)
         if(nextprops.control.code===1){//只有code为1操作为编辑时才会走这里并把父级传来的数据渲染
             this.setState({
                 name:modifydata[0].name,
@@ -33,14 +35,21 @@ class listModle extends React.Component {
             this.rel()//新增弹框 隐藏时 不执行新增函数
 		}
     }
-    qule =(con)=>{//取消新增
-        this.props.Operationaldata(con)
+    qule =()=>{//取消按钮
+        this.props.Operationaldata({state:false,control:{code:7}})
         console.log(this.props.modifydata)
+        this.setState({
+            name:'',
+            age:'',
+            address:'',
+            number:'',
+            key:''
+        })
     }
     rel= ()=>{//确认按钮
         if(this.props.control.code === 0){//新增数据走这里
             let listdata = JSON.parse(localStorage.getItem('listdata'));
-            let datae = {
+            let changedata = {
                 name:this.state.name,
                 age:this.state.age,
                 address:this.state.address,
@@ -50,7 +59,7 @@ class listModle extends React.Component {
             if(this.state.name === '' || this.state.age ===''|| this.state.adress ===''|| this.state.number ===''){//表单信息任一一个未添加全局提醒
                     message.info('新增所有信息不能为空!');
             }else{
-                    this.props.Operationaldata({state:false,datae,control:{code:9}})
+                    this.props.Operationaldata({state:false,changedata,control:{code:9}})
                     this.setState({
                         name:'',
                         age:'',
@@ -61,8 +70,7 @@ class listModle extends React.Component {
             return
         }
        if(this.props.control.code === 1){//编辑数据从这里出发直接将编辑好的state发送到父级
-           console.log(this.state)
-           this.props.Operationaldata({state:false,datae:this.state,control:{code:8}})
+           this.props.Operationaldata({state:false,changedata:this.state,control:{code:8}})
            this.setState({
                 name:'',
                 age:'',
@@ -121,7 +129,7 @@ class listModle extends React.Component {
                 </div>
                 <div className='list_modle_k_btn'>
                     <Button onClick = {()=>{this.rel()}} type="primary">确认</Button>
-                    <Button onClick = {()=>{this.qule(false)}}>取消</Button>
+                    <Button onClick = {()=>{this.qule()}}>取消</Button>
                 </div>
             </div>
         </div>;

@@ -11,7 +11,9 @@ import Getlist from '../../http/list';
 
 // import ReactDOM from 'react-dom';
 const Search = Input.Search;
+
 class List extends React.Component {
+    
     constructor() {
         super();
         this.state = {
@@ -32,8 +34,9 @@ class List extends React.Component {
             rowSelection:{//选中回调
                 onChange: (selectedRowKeys, selectedRows) => {//选中的每条数据key，及数据
                     // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+                    // localStorage.setItem('tempdata',JSON.stringify(selectedRows))
                     this.setState({
-                        tempdata:[...selectedRows]
+                        tempdata:[...selectedRows],
                     })
                 },
                 getCheckboxProps: record => ({
@@ -42,7 +45,7 @@ class List extends React.Component {
             }
         }
     }
-
+    
     componentDidMount() {
         this.setState({
             data: JSON.parse(localStorage.getItem('listdata')||[]),
@@ -54,21 +57,43 @@ class List extends React.Component {
     }
     Operationaldata =(mode)=>{//操作数据
         if (mode.control.code === 1){//点击编辑按钮时走这里
-            if (this.state.tempdata.length >1 ||this.state.tempdata.length<1) {//编辑信息只能选中一条
-                message.info('编辑信息>有且只能选中一条信息!') 
+            let {tempdata} = this.state
+            if (tempdata.length > 1 || tempdata.length < 1) {//编辑信息只能选中一条
+                message.info(`编辑信息只能选中1条信息!您已选中${tempdata.length}条！`) 
                 return
-            };
-            this.setState({//编辑信息渲染
+            }else{
+                this.setState({//编辑信息渲染
+                    modleshow:mode.state,
+                    // data: JSON.parse(localStorage.getItem('listdata')),
+                    control:{
+                        title:mode.control.title,
+                        code:mode.control.code,
+                        modifydata:tempdata
+                    }
+                })
+            }
+            return
+        }
+        if(mode.control.code === 8){//编辑确认按钮走这里code为8时为
+            // console.log(mode.changedata)
+            // console.log(this.state.data)
+            let tempary = this.state.data.map((item)=>{
+                // console.log(item)
+                return item.key === mode.changedata.key ? mode.changedata:item
+            })
+            localStorage.setItem('listdata',JSON.stringify(tempary))
+            this.setState({
+                data: JSON.parse(localStorage.getItem('listdata')),
+                saji: false,
                 modleshow:mode.state,
-                // data: JSON.parse(localStorage.getItem('listdata')),
+                tempdata:[mode.changedata],
                 control:{
-                    title:mode.control.title,
                     code:mode.control.code,
-                    modifydata:this.state.tempdata
+                    // modifydata:mode.changedata
                 }
             })
             return
-        }
+        } 
         if(mode.control.code === 0){//点击新增走这里
             this.setState({
                 modleshow:mode.state,
@@ -81,27 +106,29 @@ class List extends React.Component {
             })  
             return
         }
-        if(mode.control.code === 9){
+        if(mode.control.code === 9){//新增确认走这里
             let copdata = JSON.parse(localStorage.getItem('listdata'))
-            copdata.unshift(mode.datae)//拼接子组件弹框传来的数据
+            copdata.unshift(mode.changedata)//拼接子组件弹框传来的数据
             localStorage.setItem('listdata',JSON.stringify(copdata))//重新设置到数据中心
             this.setState({
                 modleshow:mode.state,
                 data: copdata,
                 control:{
                     title:mode.control.title,
-                    code:mode.control.code
                 }
             })
+            return
         }
-        if(mode.control.code === 8){//code为8时为编辑确认按钮走这里
+        
+        if(mode.control.code === 7){//code 为7时为取消按钮走这里    
             this.setState({
                 modleshow:mode.state,
                 control:{
                     code:mode.control.code
                 }
             })
-        }        
+            return
+        }       
     }  
     render() {
         let {
@@ -137,7 +164,7 @@ class List extends React.Component {
                 <Table 
                 bordered={true} 
                 loading={saji} 
-                rowSelection={rowSelection} 
+                rowSelection = {rowSelection}
                 columns={columns} 
                 dataSource={data}
                 pagination={pagination}
