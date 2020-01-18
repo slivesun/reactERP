@@ -14,8 +14,6 @@ class listModle extends React.Component {
     }
     UNSAFE_componentWillReceiveProps (nextprops){//父组件数据变化时
         let {modifydata} = nextprops.control
-        console.log(nextprops)
-        console.log(this.props)
         if(nextprops.control.code===1){//只有code为1操作为编辑时才会走这里并把父级传来的数据渲染
             this.setState({
                 name:modifydata[0].name,
@@ -37,7 +35,6 @@ class listModle extends React.Component {
     }
     qule =()=>{//取消按钮
         this.props.Operationaldata({state:false,control:{code:7}})
-        console.log(this.props.modifydata)
         this.setState({
             name:'',
             age:'',
@@ -48,13 +45,13 @@ class listModle extends React.Component {
     }
     rel= ()=>{//确认按钮
         if(this.props.control.code === 0){//新增数据走这里
-            let listdata = JSON.parse(localStorage.getItem('listdata'));
+            // let listdata = JSON.parse(localStorage.getItem('listdata'));
             let changedata = {
                 name:this.state.name,
                 age:this.state.age,
                 address:this.state.address,
                 number:this.state.number,
-                key:Number(Number(listdata.length)+1),//key值是唯一的添加key在原来的数据基础上加1
+                key:Math.random()+ 3.2,//key值是唯一的添加key在原来的数据基础上加1
             }
             if(this.state.name === '' || this.state.age ===''|| this.state.adress ===''|| this.state.number ===''){//表单信息任一一个未添加全局提醒
                     message.info('新增所有信息不能为空!');

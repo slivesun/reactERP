@@ -3,7 +3,8 @@ import {
     Table,
     Button,
     Input,
-    message 
+    message,
+    Modal
 } from 'antd';
 import ListModle from './listmodle';
 import '../../less/list.less';
@@ -21,6 +22,7 @@ class List extends React.Component {
             saji: true, //控制页面是否加载页
             columns: [], //表格头部
             modleshow:false,//编辑框开关
+            visible:false,//删除提示框开关
             operation:['新增','编辑','删除'],//操作按钮
             control:{//弹框标题及操作按钮识别及内容
                 title:'',//操作名称
@@ -45,8 +47,7 @@ class List extends React.Component {
             }
         }
     }
-    
-    componentDidMount() {
+    componentDidMount() {//初始化数据 请求数据
         this.setState({
             data: JSON.parse(localStorage.getItem('listdata')||[]),
             saji: false,
@@ -56,80 +57,105 @@ class List extends React.Component {
         Getlist()//请求数据
     }
     Operationaldata =(mode)=>{//操作数据
-        if (mode.control.code === 1){//点击编辑按钮时走这里
-            let {tempdata} = this.state
-            if (tempdata.length > 1 || tempdata.length < 1) {//编辑信息只能选中一条
-                message.info(`编辑信息只能选中1条信息!您已选中${tempdata.length}条！`) 
-                return
-            }else{
-                this.setState({//编辑信息渲染
+        let {tempdata} = this.state
+        switch (mode.control.code) {
+            case 0://点击新增走这里
+                this.setState({
                     modleshow:mode.state,
-                    // data: JSON.parse(localStorage.getItem('listdata')),
                     control:{
                         title:mode.control.title,
-                        code:mode.control.code,
-                        modifydata:tempdata
+                        code:mode.control.code
+                    }
+                })  
+                break;
+            case 9://新增确认走这里
+                let copdata = JSON.parse(localStorage.getItem('listdata'))
+                copdata.unshift(mode.changedata)//拼接子组件弹框传来的数据
+                localStorage.setItem('listdata',JSON.stringify(copdata))//重新设置到数据中心
+                this.setState({
+                    modleshow:mode.state,
+                    data: copdata,
+                    control:{
+                        title:mode.control.title,
                     }
                 })
-            }
-            return
+                break;
+            case 1://点击编辑按钮时走这里
+                if(this.state.data<1){ 
+                    message.info(`暂无数据！`) 
+                    return
+                }
+                if (tempdata.length > 1 || tempdata.length < 1) {//编辑信息只能选中一条
+                    message.info(`请选中其中一条! 您已选中${tempdata.length}条！`) 
+                    return
+                }else{
+                    this.setState({//编辑信息渲染
+                        modleshow:mode.state,
+                        // data: JSON.parse(localStorage.getItem('listdata')),
+                        control:{
+                            title:mode.control.title,
+                            code:mode.control.code,
+                            modifydata:tempdata
+                        }
+                    })
+                }
+                break;
+            case 8://编辑确认按钮走这里code为8时为
+                let tempary = this.state.data.map((item)=>{
+                    return item.key === mode.changedata.key ? mode.changedata:item
+                })
+                localStorage.setItem('listdata',JSON.stringify(tempary))
+                this.setState({
+                    data: JSON.parse(localStorage.getItem('listdata')),
+                    saji: false,
+                    modleshow:mode.state,
+                    tempdata:[mode.changedata],
+                    control:{
+                        code:mode.control.code,
+                    }
+                })
+                break;
+            case 7://code 为7时为取消按钮走这里  
+                this.setState({
+                    modleshow:mode.state,
+                    control:{
+                        code:mode.control.code
+                    }
+                })
+                break;
+            case 'del'://删除走这里code 为 'del'
+                if(tempdata.length>=1){
+                    this.setState({
+                        visible:true
+                    })
+                    return
+                }
+                message.info(`您当前选中 ${tempdata.length} 条数据，操作无效!`);
+                break;
+            default:
+                break
         }
-        if(mode.control.code === 8){//编辑确认按钮走这里code为8时为
-            // console.log(mode.changedata)
-            // console.log(this.state.data)
-            let tempary = this.state.data.map((item)=>{
-                // console.log(item)
-                return item.key === mode.changedata.key ? mode.changedata:item
-            })
-            localStorage.setItem('listdata',JSON.stringify(tempary))
-            this.setState({
-                data: JSON.parse(localStorage.getItem('listdata')),
-                saji: false,
-                modleshow:mode.state,
-                tempdata:[mode.changedata],
-                control:{
-                    code:mode.control.code,
-                    // modifydata:mode.changedata
-                }
-            })
-            return
-        } 
-        if(mode.control.code === 0){//点击新增走这里
-            this.setState({
-                modleshow:mode.state,
-                // data: JSON.parse(localStorage.getItem('listdata')),
-                control:{
-                    title:mode.control.title,
-                    code:mode.control.code
-                }
-
-            })  
-            return
-        }
-        if(mode.control.code === 9){//新增确认走这里
-            let copdata = JSON.parse(localStorage.getItem('listdata'))
-            copdata.unshift(mode.changedata)//拼接子组件弹框传来的数据
-            localStorage.setItem('listdata',JSON.stringify(copdata))//重新设置到数据中心
-            this.setState({
-                modleshow:mode.state,
-                data: copdata,
-                control:{
-                    title:mode.control.title,
-                }
-            })
-            return
-        }
-        
-        if(mode.control.code === 7){//code 为7时为取消按钮走这里    
-            this.setState({
-                modleshow:mode.state,
-                control:{
-                    code:mode.control.code
-                }
-            })
-            return
-        }       
-    }  
+    } 
+    handleOk = () => {//删除确认走这里
+        let {data,tempdata} = this.state;
+        let ary = tempdata.map((t)=>t.key);
+        // 过滤掉所有选中的数据
+        data = data.filter((item)=>{
+            return !ary.includes(item.key)
+        })        
+        this.setState({
+            data:data,
+            tempdata:[],
+            visible:false
+        })
+        localStorage.setItem('listdata',JSON.stringify(data));
+        message.success('删除成功！');
+    }
+    handleCancel = () => {//删除取消走这里
+        this.setState({
+        visible: false,
+        });
+    }        
     render() {
         let {
             saji,
@@ -142,11 +168,23 @@ class List extends React.Component {
             control
         } = this.state
         return<div className='list'>
+                {/* 操作弹框 */}
                 <ListModle  
                     modleshow={modleshow}
                     Operationaldata = {(mode)=>{this.Operationaldata(mode)}}
                     control={control}
                 ></ListModle>
+                {/* 删除确认提示框 */}
+                <Modal
+                    title="是否确认删除?"
+                    visible={this.state.visible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    okText="确认"
+                    cancelText="取消"
+                    >
+                        <p>您将删除选中的所有信息！</p>
+                </Modal>
                 <div className='list_operation'>
                     {/* 新增 */}
                     <Button type="primary" 
@@ -154,7 +192,9 @@ class List extends React.Component {
                     {/* 编辑 */}
                     <Button type="dashed"  
                         onClick={()=>{this.Operationaldata({state:true,control:{title:operation[1],code:1}})}}>{operation[1]}</Button>
-                    <Button type="danger" >{operation[2]}</Button>
+                    {/* 删除 */}
+                    <Button type="danger" 
+                        onClick={()=>{this.Operationaldata({control:{title:operation[2],code:'del'}})}}>{operation[2]}</Button>
                     <Search
                         placeholder="输入姓名或编号搜索"
                         style={{ width: 200 }}
