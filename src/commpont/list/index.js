@@ -8,7 +8,7 @@ import {
 } from 'antd';
 import ListModle from './listmodle';
 import '../../less/list.less';
-import Getlist from '../../http/list';
+import {Getlist} from '../../http/http';
 
 // import ReactDOM from 'react-dom';
 const Search = Input.Search;

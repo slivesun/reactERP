@@ -22,6 +22,7 @@
     "css-loader": "3.2.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
+    "echarts": "^4.6.0",
     "eslint": "^6.6.0",
     "eslint-config-react-app": "^5.1.0",
     "eslint-loader": "3.0.2",
@@ -33,6 +34,7 @@
     "file-loader": "4.3.0",
     "fs-extra": "^8.1.0",
     "html-webpack-plugin": "4.0.0-beta.5",
+    "http-proxy-middleware": "^1.0.3",
     "identity-obj-proxy": "3.0.0",
     "jest": "24.9.0",
     "jest-environment-jsdom-fourteen": "0.1.0",
@@ -143,5 +145,6 @@
     "presets": [
       "react-app"
     ]
-  }
+  },
+  "proxy":"https://www.maomin.club"
 }

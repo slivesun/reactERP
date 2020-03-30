@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom'
 import App from './App';
-import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
 
 // 将 axios 挂载 到 React 上的步骤
@@ -26,7 +25,9 @@ axios.defaults.transformRequest = [function (data, headers) {
 }]
 
 // 设置 全局的 baseURL
-axios.defaults.baseURL = 'http://rap2api.taobao.org/app/mock/242437'
+// axios.defaults.baseURL = 'https://lab.isaaclin.cn'
+// 设置 全局的 baseURL
+// axios.defaults.baseURL = 'http://rap2api.taobao.org/app/mock/242437'
 
 // 将 axios 挂载 到 父类的 原型上；
 React.Component.prototype.axios = axios
@@ -34,5 +35,3 @@ React.Component.prototype.axios = axios
 ReactDOM.render( <BrowserRouter>
     <App />
 </BrowserRouter>, document.getElementById('root'));
-
-serviceWorker.unregister();
